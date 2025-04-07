@@ -28,9 +28,9 @@ app.post("/api/transaction", authMiddleware, handleTransaction);
 // Endpoint for POST requests and match transactionsdata - detta kommer in senare
 //app.post("/api/transaction-check", authMiddleware, handleTransactionCheck); // Sends to controller that handles the logic
 
-// Start the server
+// Start the Express server, listening on the specified port and bind it to all available network interfaces ('0.0.0.0').
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 

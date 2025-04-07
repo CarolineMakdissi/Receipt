@@ -12,7 +12,7 @@ export const createTransactionsTable = async () => {
         acquirerTransactionTimestamp VARCHAR(255) NOT NULL,
         transactionAmount DECIMAL(10, 2) NOT NULL,
         transactionCurrency VARCHAR(10) NOT NULL,
-        authorizationCode VARCHAR(255) NOT NULL,a
+        authorizationCode VARCHAR(255) NOT NULL,
         systemTraceAuditNumber VARCHAR(255) NOT NULL,
         maskedPen VARCHAR(255) NOT NULL,
         merchantName VARCHAR(255) NOT NULL,
