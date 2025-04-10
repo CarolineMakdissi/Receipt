@@ -1,38 +1,38 @@
 import dotenv from "dotenv";
-import { createTransactionsTable } from './src/Database/createTransactionTable.js';
 dotenv.config({ path: "./.env" });
 
 import express from "express";
 import bodyParser from "body-parser";
-import { handleTransaction } from "./src/Controllers/transactionController.js"; // Import controller
-import { authMiddleware } from "./src/Middlewares/authMiddleware.js"; // Import middleware
-import db from "./src/Database/db.js";
+import { createTables } from "./src/Database/createTables.js"; 
+import { handleTransaction } from "./src/Controllers/transactionController.js"; 
+import { authMiddleware } from "./src/Middlewares/authMiddleware.js"; 
+import { db } from "./src/Database/db.js";
 
 const app = express();
 
-// Middleware
-app.use(bodyParser.json()); // Allows us to receive JSON in POST requests
+// Middleware to parse incoming JSON
+app.use(bodyParser.json());
 
-// Check if the database is connected
+// Connect to MySQL and check the connection
 db.getConnection()
   .then((connection) => {
     console.log("Connected to MySQL");
-    connection.release();
-    createTransactionsTable(); // Create the table if it doesn't exist
+    connection.release(); // Don't forget to release the connection after use
+    createTables(); // Create all tables if they don't exist
   })
-  .catch((err) => console.error("Error connecting to MySQL", err));
+  .catch((err) => {
+    console.error("Error connecting to MySQL", err);
+    process.exit(1); // Stop the app if the DB connection fails
+  });
 
-// Endpoint to save transactions och define an endpoint for POST request
+// Endpoint to receive and store transactions
 app.post("/api/transaction", authMiddleware, handleTransaction);
 
-// Endpoint for POST requests and match transactionsdata - detta kommer in senare
-//app.post("/api/transaction-check", authMiddleware, handleTransactionCheck); // Sends to controller that handles the logic
+// Future endpoint to check transactions and reply with ok (to be implemented later)
+// app.post("/api/transaction-check", authMiddleware, handleTransactionCheck);
 
-// Start the Express server, listening on the specified port and bind it to all available network interfaces ('0.0.0.0').
+// Start the Express server on the specified port and bind to all interfaces
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-
-
